@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sleep Cycle Calculator — Best Time to Go to Bed</title>
+<meta name="description" content="Free sleep cycle calculator. Find the best time to go to bed or wake up, based on 90-minute sleep cycles. Wake up refreshed.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6;padding:16px;max-width:640px;margin:0 auto}
+h1{font-size:1.6rem;color:#c4b5fd;margin-bottom:4px}
+.sub{color:#94a3b8;margin-bottom:20px}
+.card{background:#1e293b;border-radius:14px;padding:18px;margin-bottom:20px}
+.modes{display:flex;gap:10px;margin-bottom:14px}
+.modes label{flex:1;text-align:center;padding:12px;border-radius:10px;background:#0f172a;border:2px solid #334155;cursor:pointer;font-size:.95rem}
+.modes input{display:none}
+.modes input:checked+span{color:#fff}
+.modes label:has(input:checked){border-color:#8b5cf6;background:#312e81}
+input[type=time]{width:100%;padding:14px;font-size:1.1rem;border-radius:10px;border:2px solid #334155;background:#0f172a;color:#fff;margin-bottom:14px}
+button{width:100%;padding:15px;font-size:1.05rem;font-weight:700;border:none;border-radius:10px;background:#8b5cf6;color:#fff;cursor:pointer}
+button:active{background:#7c3aed}
+.result{display:flex;justify-content:space-between;align-items:center;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:14px;margin-top:10px}
+.result .t{font-size:1.25rem;font-weight:700;color:#c4b5fd}
+.badge{background:#8b5cf6;color:#fff;font-size:.7rem;padding:3px 8px;border-radius:20px}
+h2{font-size:1.15rem;color:#c4b5fd;margin:24px 0 8px}
+p,li{color:#cbd5e1;font-size:.95rem}
+ul{padding-left:20px}
+details{background:#1e293b;border-radius:10px;padding:12px;margin-bottom:8px}
+summary{cursor:pointer;font-weight:600;color:#e2e8f0}
+footer{margin-top:30px;font-size:.8rem;color:#64748b;text-align:center}
+#share{margin-top:14px;background:#0ea5e9;display:none}
+</style>
+</head>
+<body>
+
+<h1>🌙 Sleep Cycle Calculator</h1>
+<p class="sub">Wake up refreshed by timing 90-minute sleep cycles.</p>
+
+<div class="card">
+  <div class="modes">
+    <label><input type="radio" name="mode" value="wake" checked><span>I need to <b>wake up</b> at…</span></label>
+    <label><input type="radio" name="mode" value="sleep"><span>I'm <b>going to bed now</b></span></label>
+  </div>
+  <input type="time" id="wakeInput" value="07:00">
+  <button onclick="calculate()">Calculate</button>
+  <div id="results"></div>
+  <button id="share" onclick="shareResult()">📤 Share my bedtime</button>
+</div>
+
+<h2>How it works</h2>
+<p>Sleep happens in cycles of about <strong>90 minutes</strong>. Waking up at the end of a complete cycle — rather than in the middle of deep sleep — makes you feel rested. This calculator also adds the average <strong>15 minutes</strong> it takes to fall asleep. Aim for <strong>5 to 6 cycles</strong> (7.5–9 hours).</p>
+
+<h2>What are sleep cycles?</h2>
+<p>Each cycle alternates light sleep, deep sleep and REM (dream) sleep. Deep sleep dominates the early cycles, REM the later ones. Cutting a cycle short often causes grogginess, even after 8 hours in bed.</p>
+
+<h2>Tips to fall asleep faster</h2>
+<ul>
+<li>Keep your bedroom between 60–67°F (15–19°C).</li>
+<li>Avoid screens 30 minutes before bed.</li>
+<li>Get natural light within an hour of waking.</li>
+<li>Keep a consistent wake-up time, even on weekends.</li>
+</ul>
+
+<h2>FAQ</h2>
+<details><summary>Are 90-minute cycles exact for everyone?</summary><p>No. Individual cycles range from 80 to 120 minutes. Use these times as a starting point and adjust by 10–15 minutes based on how you feel.</p></details>
+<details><summary>Is 4 cycles (6 hours) enough?</summary><p>Occasionally, yes. Long-term, most adults need 5–6 cycles. Chronic short sleep affects memory, mood and immunity.</p></details>
+<details><summary>What if I wake up during the night?</summary><p>That's normal — brief awakenings often happen at cycle boundaries. If you're awake more than a few minutes, the issue is usually stress, light or noise.</p></details>
+<details><summary>Does this work for naps?</summary><p>For naps, prefer 20 minutes (light sleep only) or one full 90-minute cycle. In between, you'll likely wake groggy.</p></details>
+
+<footer>Free tool · Not medical advice · Results are estimates based on average sleep cycles.</footer>
+
+<script>
+const CYCLE=90,FALL=15,results=document.getElementById('results'),shareBtn=document.getElementById('share');
+document.getElementById('wakeInput').style.display='block';
+document.querySelectorAll('input[name="mode"]').forEach(r=>r.addEventListener('change',()=>{
+  document.getElementById('wakeInput').style.display=(r.value==='wake'&&r.checked)?'block':'none';
+}));
+function fmt(min){min=((min%1440)+1440)%1440;let h=Math.floor(min/60),m=min%60,ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+String(m).padStart(2,'0')+' '+ap}
+function calculate(){
+  const mode=document.querySelector('input[name="mode"]:checked').value;
+  let base;
+  if(mode==='wake'){const[h,m]=document.getElementById('wakeInput').value.split(':');base=(+h)*60+(+m);}
+  else{const n=new Date();base=n.getHours()*60+n.getMinutes();}
+  let html='';
+  for(let n=6;n>=3;n--){
+    const t=mode==='wake'?base-FALL-n*CYCLE:base+FALL+n*CYCLE;
+    const label=mode==='wake'?'Sleep by':'Wake at';
+    const best=(n===5||n===6)?'<span class="badge">Recommended</span>':'';
+    html+='<div class="result"><div><div class="t">'+fmt(t)+'</div><div style="font-size:.8rem;color:#94a3b8">'+label+' · '+n+' cycles · '+(n*1.5)+'h</div></div>'+best+'</div>';
+  }
+  results.innerHTML=html;shareBtn.style.display='block';
+}
+function shareResult(){
+  const first=results.querySelector('.t');
+  const txt=first?('My sleep calculator says: '+first.textContent+' 😴 Try it:'):'Try this sleep calculator:';
+  if(navigator.share){navigator.share({text:txt,url:location.href});}
+  else{navigator.clipboard.writeText(txt+' '+location.href);alert('Link copied — paste it anywhere!');}
+}
+calculate();
+</script>
+
+</body>
+</html>
