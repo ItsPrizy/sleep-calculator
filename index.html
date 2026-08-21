@@ -3,8 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sleep Cycle Calculator — Best Time to Go to Bed</title>
-<meta name="description" content="Free sleep cycle calculator. Find the best time to go to bed or wake up, based on 90-minute sleep cycles. Wake up refreshed.">
+<title>Sleep Cycle Calculator — Best Time to Go to Bed or Wake Up | My Sleep</title>
+<meta name="description" content="Free sleep cycle calculator. Find the best time to go to bed or wake up based on 90-minute sleep cycles. Wake up refreshed, not groggy. Calculate your ideal bedtime now.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0f172a">
+<link rel="canonical" href="https://my-sleep.netlify.app/">
+
+<!-- Open Graph (Facebook, LinkedIn, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://my-sleep.netlify.app/">
+<meta property="og:title" content="Sleep Cycle Calculator — Wake Up Refreshed">
+<meta property="og:description" content="Find the best time to go to bed or wake up, based on 90-minute sleep cycles. Free, simple, no sign-up.">
+<meta property="og:site_name" content="My Sleep">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sleep Cycle Calculator — Wake Up Refreshed">
+<meta name="twitter:description" content="Find the best time to go to bed or wake up, based on 90-minute sleep cycles. Free tool.">
+
+<!-- Données structurées : FAQ (visible dans Google) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are 90-minute sleep cycles exact for everyone?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Individual cycles range from 80 to 120 minutes. Use these times as a starting point and adjust by 10–15 minutes based on how you feel."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is 4 cycles (6 hours) enough sleep?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Occasionally, yes. Long-term, most adults need 5–6 full cycles. Chronic short sleep affects memory, mood and immunity."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I wake up during the night?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "That's normal — brief awakenings often happen at cycle boundaries. If you're awake more than a few minutes, the issue is usually stress, light or noise."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this sleep calculator work for naps?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For naps, prefer 20 minutes (light sleep only) or one full 90-minute cycle. In between, you'll likely wake up groggy."
+      }
+    }
+  ]
+}
+</script>
+
+<!-- Données structurées : Application web -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Sleep Cycle Calculator",
+  "url": "https://my-sleep.netlify.app/",
+  "description": "Calculate the best time to go to bed or wake up using 90-minute sleep cycles.",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "All"
+}
+</script>
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6;padding:16px;max-width:640px;margin:0 auto}
@@ -41,7 +112,7 @@ footer{margin-top:30px;font-size:.8rem;color:#64748b;text-align:center}
     <label><input type="radio" name="mode" value="wake" checked><span>I need to <b>wake up</b> at…</span></label>
     <label><input type="radio" name="mode" value="sleep"><span>I'm <b>going to bed now</b></span></label>
   </div>
-  <input type="time" id="wakeInput" value="07:00">
+  <input type="time" id="wakeInput" value="07:00" aria-label="Wake-up time">
   <button onclick="calculate()">Calculate</button>
   <div id="results"></div>
   <button id="share" onclick="shareResult()">📤 Share my bedtime</button>
@@ -92,7 +163,7 @@ function calculate(){
 }
 function shareResult(){
   const first=results.querySelector('.t');
-  const txt=first?('My sleep calculator says: '+first.textContent+' 😴 Try it:'):'Try this sleep calculator:';
+  const txt=first?('My sleep calculator says: '+first.textContent+' \u{1F634} Try it:'):'Try this sleep calculator:';
   if(navigator.share){navigator.share({text:txt,url:location.href});}
   else{navigator.clipboard.writeText(txt+' '+location.href);alert('Link copied — paste it anywhere!');}
 }
